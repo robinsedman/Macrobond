@@ -9,11 +9,11 @@ setuptools.setup(
     name=__name__,
     version=__version__,
     author="Robin Sedman",
-    author_email="robin.sedman@seb.se",
+    author_email="robin.sedman@gmail.com",
     description="Pandas wrapper for the Macrobond API",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://sebgroup.com",
+    url="https://github.com/robinsedman/Macrobond",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
