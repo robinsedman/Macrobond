@@ -1,0 +1,6 @@
+macrobond_api_constants
+pandas
+pytz
+datetime
+win32com.client
+typing
