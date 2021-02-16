@@ -150,19 +150,19 @@ class Macrobond:
 		# Convert to two-level columns
 		df.columns = pd.MultiIndex.from_tuples(df.columns)
 
-		# Check how MANY revisions we have (not used at the moment)
+		# Check how many revisions we have (not used at the moment)
 		n = 0
 		while True:
 			x = pd.Series(series.GetNthRelease(n).Values)
 
 			# If all in the series is nan then we assume we should break
 			if np.all(np.isnan(x)):
-				print(f'We have at: {n - 1} revisions')
+				print(f'We have: {n - 1} revisions')
 				break
 			n += 1
 
 		'''
-		Functions / attributes that could be interesting to look at
+		Functions / attributes that could be interesting to further develop
 
 		series.GetCompleteHistory(): Get list of all revisions.
 		series.StoresRevisions: If True, then the series stores revision history. This can be True while HasRevisions is False if no revisions have yet been recorded.
@@ -180,13 +180,11 @@ class Macrobond:
 
 		# Define currency for the request
 		# Currency codes that is used in Macrobond: https://www.macrobond.com/currency-list/
-		custom_ccy = False
 		currency = 'USD'
 
 		# Extract kwargs
 		for key, val in kwargs.items():
 			if key.lower() == 'currency':
-				custom_ccy = True
 				currency = kwargs.get('Currency')
 			else:
 				raise KeyError(f'Kwargs key: {key} not defined')
@@ -198,9 +196,8 @@ class Macrobond:
 		for tick in ticker_list:
 			req.AddSeries(tick)
 
-		# Possibly add a custom currency
-		if custom_ccy:
-			req.Currency = currency
+		# Add currency for the request
+		req.Currency = currency
 
 		# Finally fetch the data
 		series = self.mbdb.FetchSeries(req)
@@ -216,7 +213,7 @@ class Macrobond:
 		Function to define a query (concept) and then find series that match the concept and return those tickers
 		"""
 
-		# Pre-defined variables (can be change with kwargs inputs)
+		# Pre-defined variables (can be changed with kwargs inputs)
 
 		# Region list, key: RegionList
 		region_map, region_map_inverse = self.f_region_map()
