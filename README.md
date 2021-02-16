@@ -9,11 +9,11 @@ Documentation from Macrobond can be found here:
 * https://help.macrobond.com/technical-information/common-metadata/
 
 # Installation
-The [macrobond-api-constants](https://pypi.org/project/macrobond-api-constants/) package is required.
+The [macrobond-api-constants](https://pypi.org/project/macrobond-api-constants/) package is required:
 
     pip install macrobond_api_constants
     
-Then simply install with pip
+Then simply install the latest version Python package index (PyPI) as follows:
     
     pip install macrobond
 
