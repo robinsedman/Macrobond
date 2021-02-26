@@ -577,9 +577,15 @@ class Macrobond:
 		bbg_field_tf = False
 		bbg_fields = []
 
+		try:
+			assert type(bbg_ticker) is list
+		except AssertionError as ae:
+			print(f"Ticker input must be a list. Error: {ae}")
+			return []
+
 		# Extract kwargs
 		for key, val in kwargs.items():
-			if key.lower() == 'bbg_field':
+			if key.lower() == 'bbg_fields':
 				bbg_field_tf = True
 				bbg_fields: list = kwargs.get('BBG_Fields')
 			else:
