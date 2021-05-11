@@ -1,5 +1,6 @@
 macrobond_api_constants
 pandas
+numpy
 pytz
 datetime
 win32com.client
