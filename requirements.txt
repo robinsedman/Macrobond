@@ -4,4 +4,4 @@ numpy
 pytz
 datetime
 typing
-win32com.client
+pywin32
