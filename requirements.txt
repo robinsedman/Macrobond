@@ -3,5 +3,5 @@ pandas
 numpy
 pytz
 datetime
-win32com.client
 typing
+win32com.client
