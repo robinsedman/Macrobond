@@ -211,32 +211,40 @@ class Macrobond:
 						  **kwargs) -> list:
 		"""
 		Function to define a query (concept) and then find series that match the concept and return those tickers
+
+		Details on how to create narrow search queries:
+		https://help.macrobond.com/tutorials-training/2-finding-data/finding-data-in-search/search-terms-for-more-accurate-results/
 		"""
 
-		# Pre-defined variables (can be changed with kwargs inputs)
-
-		# Region list, key: RegionList
+		# Region list, kwargs key: RegionList
 		region_map, region_map_inverse = self.f_region_map()
 		region_list = list(region_map.keys())
 
-		# Season adjustment, key: SeasonAdj
+		# Season adjustment, kwargs key: SeasonAdj
 		season_adj_tf = False
 
-		# Include Discontinued Series, key: IncludeDiscontinued
+		# Frequency of time series, kwargs key: Frequency
+		frequency_tf = False
+		frequency = ''  # E.g. 'weekly'
+
+		# Include Discontinued Series, kwargs key: IncludeDiscontinued
 		include_discontinued_tf = False
 
-		# Free text search, key: FreeText
+		# Free text search, kwargs key: FreeText
 		free_text_search_tf = False
 		free_text_query = ''
 
 		# Extract kwargs
 		for key, val in kwargs.items():
 			if key.lower() == 'regionlist':
-				region_list = kwargs.get('RegionList')
+				region_list: list = kwargs.get('RegionList')
+			elif key.lower() == 'frequency':
+				frequency: str = kwargs.get('Frequency')
+				frequency_tf = True
 			elif key.lower() == 'seasonadj':
-				season_adj_tf = kwargs.get('SeasonAdj')
+				season_adj_tf: bool = kwargs.get('SeasonAdj')
 			elif key.lower() == 'includediscontinued':
-				include_discontinued_tf = kwargs.get('IncludeDiscontinued')
+				include_discontinued_tf: bool = kwargs.get('IncludeDiscontinued')
 			elif key.lower() == 'freetext':
 				free_text_search_tf = True
 				free_text_query: str = kwargs.get('FreeText')
@@ -260,15 +268,23 @@ class Macrobond:
 		Example of concepts: gdp_total_sa, markit_prev_manu_pmi, markit_prev_serv_pmi
 		'''
 
-		# Either we do free text search or concept search
+		# Either free text search or concept search
 		if free_text_search_tf:
 			query.Text = free_text_query
 		else:
 			query.AddAttributeValueFilter("RegionKey", concept_filter)
 
-		# Add the region filter if we are not doing a free text search (which regions we look for)
-		if not free_text_search_tf:
-			query.AddAttributeValueFilter("Region", region_list)
+		'''
+        Region filter to only include time series with region chosen
+        Example regions in: self.f_region_map()
+        '''
+
+		# Region filter
+		query.AddAttributeValueFilter("Region", region_list)
+
+		# Frequency filter
+		if frequency_tf:
+			query.AddAttributeValueFilter("Frequency", frequency)
 
 		# Optionally set seasonlity filter
 		if season_adj_tf:
@@ -278,13 +294,13 @@ class Macrobond:
 		query.IncludeDiscontinued = include_discontinued_tf
 
 		# Do the search
-		obj_search = self.mbdb.Search(query)
+		search_result = self.mbdb.Search(query)
 
 		# Extract any entities we found
-		result = obj_search.Entities
+		result = search_result.Entities
 
 		# Check if result is truncated
-		if obj_search.isTruncated:
+		if search_result.isTruncated:
 			print(f'Search was truncated. Truncated at {len(result)} entries.')
 
 		# Extract the tickers (names)
@@ -400,23 +416,14 @@ class Macrobond:
 		replacement_comment = series.Metadata.GetFirstValue('EntityDiscontinuedComment')
 		replacement_ticker_tuple = series.Metadata.GetValues('EntityDiscontinuedReplacements')
 
-		if replacement_comment is None:
-			if len(replacement_ticker_tuple) == 0:
-				# No replacement found
-				replacement_ticker = ''
-			else:
-				assert len(replacement_ticker_tuple) == 1
-				replacement_ticker = replacement_ticker_tuple[0]
+		if replacement_comment is None and len(replacement_ticker_tuple) == 0:
+			# No replacement found
+			replacement_ticker = ''
 		else:
-			print(f'Ticker: {ticker}. {replacement_comment}')
-
-			if len(replacement_ticker_tuple) == 0:
-				# No replacement found
-				replacement_ticker = ''
-			else:
-				# Check that we only get one ticker
-				assert len(replacement_ticker_tuple) == 1
-				replacement_ticker = replacement_ticker_tuple[0]
+			# Check that we only get one ticker back then print info
+			assert len(replacement_ticker_tuple) == 1
+			print(replacement_comment)
+			replacement_ticker = replacement_ticker_tuple[0]
 
 		return replacement_ticker
 

@@ -45,7 +45,20 @@ Then simply install the latest version Python package index (PyPI) as follows:
 
 #### The method above has a few more possibilities:
 * Possible to narrow to specific regions/countries
+* Possible to filter on specific frequencies  
 * Possible to create a free text search query
+
+### Free text search with filters:
+Query below implies: 
+
+_exclude: 'total return', exclude: 'price return', include: 'yield'.
+Sweden as region. Daily frequency._
+
+More details: https://help.macrobond.com/tutorials-training/2-finding-data/finding-data-in-search/search-terms-for-more-accurate-results/
+
+    ticker_list = mb.CreateSearchQuery(**{'FreeText': '-total return, -price return, yield',
+                                      'Frequency': 'daily',
+                                      'RegionList': ['se']})
 
 ### Get summary of several time series
 
