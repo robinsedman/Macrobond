@@ -14,7 +14,7 @@ The [macrobond-api-constants](https://pypi.org/project/macrobond-api-constants/)
 
     pip install macrobond_api_constants
     
-Then simply install the latest version Python package index (PyPI) as follows:
+Then simply install the latest version version of this package through Python package index (PyPI) as follows:
     
     pip install --upgrade macrobond
 
