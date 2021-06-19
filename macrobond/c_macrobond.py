@@ -400,14 +400,23 @@ class Macrobond:
 		replacement_comment = series.Metadata.GetFirstValue('EntityDiscontinuedComment')
 		replacement_ticker_tuple = series.Metadata.GetValues('EntityDiscontinuedReplacements')
 
-		if replacement_comment is None and len(replacement_ticker_tuple) == 0:
-			# No replacement found
-			replacement_ticker = ''
+		if replacement_comment is None:
+			if len(replacement_ticker_tuple) == 0:
+				# No replacement found
+				replacement_ticker = ''
+			else:
+				assert len(replacement_ticker_tuple) == 1
+				replacement_ticker = replacement_ticker_tuple[0]
 		else:
-			# Check that we only get one ticker back then print info
-			assert len(replacement_ticker_tuple) == 1
-			print(replacement_comment)
-			replacement_ticker = replacement_ticker_tuple[0]
+			print(f'Ticker: {ticker}. {replacement_comment}')
+
+			if len(replacement_ticker_tuple) == 0:
+				# No replacement found
+				replacement_ticker = ''
+			else:
+				# Check that we only get one ticker
+				assert len(replacement_ticker_tuple) == 1
+				replacement_ticker = replacement_ticker_tuple[0]
 
 		return replacement_ticker
 
