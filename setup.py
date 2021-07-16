@@ -20,7 +20,7 @@ setuptools.setup(
                  "Programming Language :: Python :: 3.8",
                  "Intended Audience :: End Users/Desktop",
                  "Intended Audience :: Financial and Insurance Industry",
-                 "Natural Language :: English"
+                 "Natural Language :: English",
                  "Development Status :: 4 - Beta",
                  "Environment :: Win32 (MS Windows)",
                  "License :: OSI Approved :: MIT License",
